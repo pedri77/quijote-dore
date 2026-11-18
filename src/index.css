@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* Lenis: su CSS no se exporta como ruta, se copia aquí. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Papel y oro (variante): papel de libro viejo con tinta, y dos acentos que son el tema de la web. El oro es lo
+   que imagina don Quijote (la luz de los libros de caballerías); el añil, lo que hay. Las secciones de aventura
+   pasan de un bloque de oro plano al papel según se aleja la cámara. Titulares en Alegreya SC (versalitas de
+   libro), texto en Alegreya y etiquetas en Alegreya Sans SC. */
+@theme {
+  --font-display: "Alegreya SC", Georgia, serif;
+  --font-sans: "Alegreya", Georgia, serif;
+  --font-etiqueta: "Alegreya Sans SC", "Gill Sans", sans-serif;
+
+  --color-papel: oklch(95% 0.022 85);
+  --color-papel-2: oklch(90% 0.026 82);
+  --color-papel-3: oklch(82% 0.03 80);
+  --color-tinta: oklch(21% 0.012 60);
+  --color-tinta-2: oklch(38% 0.016 60);
+  --color-tinta-3: oklch(52% 0.018 65);
+  --color-oro: oklch(80% 0.13 82);
+  --color-oro-2: oklch(70% 0.14 75);
+  --color-oro-osc: oklch(47% 0.1 65);
+  --color-anil: oklch(42% 0.13 268);
+  --color-anil-claro: oklch(62% 0.11 266);
+
+  --text-hero: clamp(3rem, 6.4vw, 7.5rem);
+  --text-hero--line-height: 0.86;
+
+  --text-display: clamp(2.25rem, 5vw, 4.5rem);
+  --text-display--line-height: 0.95;
+
+  --text-lead: clamp(1.125rem, 1.45vw, 1.4rem);
+  --text-lead--line-height: 1.45;
+
+  --text-body: clamp(1rem, 1.05vw, 1.125rem);
+  --text-body--line-height: 1.6;
+
+  --text-etiqueta: 0.8125rem;
+  --text-etiqueta--line-height: 1.2;
+  --text-etiqueta--letter-spacing: 0.08em;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    background: var(--color-papel);
+  }
+  body {
+    margin: 0;
+    background: var(--color-papel);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-oro);
+    color: var(--color-tinta);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-anil);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .h-pantalla {
+    height: 100svh;
+  }
+  .etiqueta {
+    font-family: var(--font-etiqueta);
+    font-size: var(--text-etiqueta);
+    letter-spacing: var(--text-etiqueta--letter-spacing);
+    font-weight: 700;
+    text-transform: lowercase;
+  }
+  /* Grano de papel: dos degradados muy suaves, sin imagen. */
+  .papel {
+    background-color: var(--color-papel);
+    background-image:
+      radial-gradient(circle at 20% 10%, oklch(100% 0 0 / 0.35), transparent 45%),
+      radial-gradient(circle at 85% 90%, oklch(70% 0.04 70 / 0.18), transparent 50%);
+  }
+  /* Tachado que se dibuja: el ancho de la raya va en --raya (0–1). */
+  .tachado {
+    position: relative;
+    display: inline;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 58%;
+    background-size: calc(var(--raya, 0) * 100%) 0.09em;
+  }
+  .pliego {
+    box-shadow:
+      0 1px 0 oklch(21% 0.012 60 / 0.08),
+      0 24px 48px -18px oklch(21% 0.012 60 / 0.35);
+  }
+  [data-aparece] {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity 0.6s cubic-bezier(0.2, 0.7, 0.1, 1),
+      transform 0.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+  [data-aparece].dentro {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-aparece] {
+      transform: none;
+      transition-duration: 0.01ms;
+    }
+  }
+}
